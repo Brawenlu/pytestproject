@@ -23,7 +23,7 @@ from Pytest.Caculartor import Calc
 # def teardown_module():
 #     print("这是一个模块级别的结束")
 
-
+import pytest,requests,json
 
 
 class Testcalc():
@@ -45,6 +45,7 @@ class Testcalc():
     #     print("这是一个方法接别的结束")
 
     def setup_class(self):
+        # self.i=1
         print("开始计算")
         self.calc=Calc()
         # 实例化测试函数
@@ -67,6 +68,79 @@ class Testcalc():
         # calc = Calc()
         result = self.calc.add(-1,-1)
         assert result==-2
+
+
+
+    def test_loginsuccess(self):
+        username ="Luwenbo"
+        pwd="sangfor123"
+
+    def setup_method(self):
+        self.i = 1
+        print(self.i)
+    def teardown_method(self):
+        print(self.i)
+        self.i = self.i + 1
+
+    @pytest.mark.parametrize('username,pwd',[
+        ['abcdefg','12345'],
+        ['dasdsad11','11111'],
+        ['sd','dsadasdasda']
+    ])
+     # 参数化需要用到的需要定义，以列表形式,就在上方就行,必须在上方
+    # 参数化传输
+    # def setup_class(self):
+
+
+
+    def test_loginfailed(self,username,pwd):
+        # print(self.i)
+        # print(type(self.i))
+        print("第"+str(self.i)+"条测试用例参数："+username)
+        print("第"+str(self.i)+"条测试用例的密码:"+pwd)
+        self.i = self.i + 1
+        # print(self.i)
+        # 同时运行的不能相加
+        # username="luwenbo1"
+        # pwd="sangfor@123"
+
+    # def test_loginfiled2(self):
+    #     username = "Luwenbo1"
+    #     pwd = "sangfor1234"
+    #
+    # def test_loginfiled3(self):
+    #     username = "Luwenbo11"
+    #     pwd = "sangfor123454"
+
+
+
+    @pytest.mark.parametrize('topic_id',[
+        "10704","10705","10706","10707"
+    ])
+    # 多个参数需要列表，单个只需要""
+
+    def test_ceshiren(self,topic_id):
+        # topic_id="10704"
+        print(type(topic_id))
+        # 使用f可以识别常量里面的变量
+        result=requests.get("https://ceshiren.com/t/topic/{}.json".format(topic_id))
+        # {}format()和f{}都可以用格式化
+
+        print(json.dumps(result.json(),sort_keys=True,indent=4))
+        if "errors" in result.json():
+            # 判断是否存在某个字段
+            print(result.json()["errors"])
+            # print("是")
+        else:pass
+
+        # if result.json()["errors"] !="":
+        #     print(result.json()["errors"])
+        # else:pass
+        respnse_id=result.json()["id"]
+        print(type(respnse_id))
+        assert topic_id==str(respnse_id)
+
+
 
 class Testdemo():
 
